@@ -19,6 +19,12 @@ public class Creature
 		angle = random.nextDouble()*(Math.PI*2);
 	}
 	
+	public void randomizeMoveRate()
+	{
+		Random random = new Random();
+		moveRate = random.nextDouble() * 3.0;
+	}
+	
 	public void checkPosition()
 	{
 		if (x>600) {
@@ -38,11 +44,17 @@ public class Creature
 		}
 	}
 	
-	public void testRandomAngle()
+	public void adjustAngleRandomly()
 	{
 		Random random = new Random();
 		
-		angle += -((Math.PI*2)*0.02) + (random.nextDouble()*((Math.PI*2)*0.04));
+		double randomOffset = -((Math.PI*2)*0.02) + (random.nextDouble()*((Math.PI*2)*0.04));
+		adjustAngle(randomOffset);
+	}
+	
+	public void adjustAngle(double offset)
+	{
+		angle += offset;
 	}
 	
 	public void testMoveForward()

@@ -34,6 +34,8 @@ public class Main
 		{
 			Creature newCreature = new Creature();
 			
+			newCreature.randomizeMoveRate();
+			
 			creatures.add(newCreature);
 		}
 		
@@ -53,20 +55,21 @@ public class Main
 		}
 	}
 	
-	public static long moveTimer = 0;
+	public static long timer = 0;
+	public static long tickInterval = 50;
 	
 	public static void update(long elapsedTime)
 	{
-		moveTimer += elapsedTime;
+		timer += elapsedTime;
 		
-		if (moveTimer>50)
+		if (timer>tickInterval)
 		{
 			for (Creature creature : creatures) 
 			{
-				creature.testRandomAngle();
+				creature.adjustAngleRandomly();
 				creature.testMoveForward();
 			}
-			moveTimer = 0;
+			timer -= tickInterval;
 		}
 	}
 	
