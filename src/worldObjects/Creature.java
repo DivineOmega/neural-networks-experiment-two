@@ -3,10 +3,14 @@ package worldObjects;
 import java.util.ArrayList;
 import java.util.Random;
 
+import util.GenomeUtils;
+
 import neuralNetwork.NeuralNetwork;
 
 public class Creature 
 {
+	public int generation = 1;
+	
 	public double x;
 	public double y;
 	public double angle;
@@ -72,7 +76,6 @@ public class Creature
 		
 		inputs.add(xDistanceToClosest);
 		inputs.add(yDistanceToClosest);
-		inputs.add(energy);
 		
 		ArrayList<Double> outputs = neuralNetwork.update(inputs);
 		
@@ -89,12 +92,28 @@ public class Creature
 
 	public void reduceEnergy()
 	{
-		energy -= 0.001;
+		energy -= 0.003;
 	}
 	
 	public boolean isDead()
 	{
 		return (energy<=0);
+	}
+	
+	public ArrayList<Double> getGenome()
+	{
+		ArrayList<Double> genome = new ArrayList<Double>();
+		
+		genome.addAll(neuralNetwork.getWeights());
+		
+		return genome;
+	}
+	
+	public ArrayList<Double> setGenome(ArrayList<Double> genome)
+	{
+		neuralNetwork.setWeights(genome);
+		
+		return genome;
 	}
 }
 

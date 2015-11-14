@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class NeuralNetwork
 {
-	int numInputs = 3;
+	int numInputs = 2;
 	int numOutputs = 3;
 	
 	int numHiddenLayers = 1;
@@ -117,12 +117,12 @@ public class NeuralNetwork
 		return ( 1 / ( 1 + Math.exp(-totalInput / activationResponse)));
 	}
 	
-	public ArrayList<Double> GetWeights()
+	public ArrayList<Double> getWeights()
 	{
 		ArrayList<Double> weights = new ArrayList<Double>();
 		
 		//for each layer
-		for (int i=0; i<neuronLayers.size() + 1; ++i)
+		for (int i=0; i<numHiddenLayers + 1; ++i)
 		{
 
 			//for each neuron
@@ -139,12 +139,12 @@ public class NeuralNetwork
 		return weights;
 	}
 	
-	public void PutWeights(ArrayList<Double> weights)
+	public void setWeights(ArrayList<Double> weights)
 	{
 		int cWeight = 0;
 		
 		//for each layer
-		for (int i=0; i<neuronLayers.size() + 1; ++i)
+		for (int i=0; i<numHiddenLayers + 1; ++i)
 		{
 
 			//for each neuron

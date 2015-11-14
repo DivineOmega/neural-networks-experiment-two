@@ -8,7 +8,9 @@ import java.awt.geom.Arc2D;
 import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Collections;
 
+import util.GenomeUtils;
 import worldObjects.Creature;
 import worldObjects.FoodPellet;
 
@@ -19,23 +21,14 @@ public class Main
 	public static int populationSize = 30;
 	public static ArrayList<Creature> creatures = new ArrayList<Creature>();
 	
-	public static int amountOfFood = 30;
+	public static int amountOfFood = 120;
 	public static ArrayList<FoodPellet> foodPellets = new ArrayList<FoodPellet>();
 	
 	public static void main(String[] args) 
 	{
 		mainWindow = new MainWindow();
 		mainWindow.setVisible(true);
-		
-		creatures.clear();
-		
-		while(creatures.size()<populationSize)
-		{
-			Creature newCreature = new Creature();
 						
-			creatures.add(newCreature);
-		}
-		
 		long lastTime = System.currentTimeMillis();
 		long currentTime;
 		long elapsedTime;
@@ -61,6 +54,29 @@ public class Main
 		
 		if (timer>tickInterval)
 		{
+			if (creatures.size() == 0)
+			{
+				while(creatures.size() < populationSize)
+				{
+					Creature newCreature = new Creature();
+					creatures.add(newCreature);
+				}
+			}
+			else if (creatures.size() < populationSize)
+			{
+				ArrayList<Creature> newCreatures = new ArrayList<Creature>();
+				
+				while (newCreatures.size() < populationSize - creatures.size())
+				{
+					ArrayList<Creature> parents = rouletteWheelSelection();
+					Creature childCreature = GenomeUtils.crossover(parents.get(0), parents.get(1));
+					
+					newCreatures.add(childCreature);
+				}
+				
+				creatures.addAll(newCreatures);
+			}
+			
 			while (foodPellets.size()<amountOfFood)
 			{
 				FoodPellet newFoodPellet = new FoodPellet();
@@ -149,9 +165,13 @@ public class Main
 				energyString = energyString.substring(0, 4);
 			}
 			
+			String genString = Integer.toString(creature.generation);
+			
 			g2d.draw(arc);
 			g2d.draw(line);
 			g2d.drawString(energyString,(int) (creature.x+(creature.diameter/2)),(int) (creature.y+(creature.diameter/2)));
+			
+			g2d.drawString(genString,(int) (creature.x+(creature.diameter/2)),(int) (creature.y-(creature.diameter/2)));
 		}
 		
 		g2d.setColor(Color.green);
@@ -164,6 +184,28 @@ public class Main
 		
 		mainWindow.drawPane.image = image;
 		mainWindow.repaint();
+	}
+	
+	public static ArrayList<Creature> rouletteWheelSelection()
+	{
+		ArrayList<Creature> selectedCreatures = new ArrayList<Creature>();
+		
+		ArrayList<Creature> routletteWheel = new ArrayList<Creature>();
+		
+		for (Creature creature : creatures) 
+		{			
+			for (double i = 0; i < creature.energy; i+=0.0001) 
+			{
+				routletteWheel.add(creature);
+			}
+		}
+		
+		Collections.shuffle(routletteWheel);
+		
+		selectedCreatures.add(routletteWheel.get(0));
+		selectedCreatures.add(routletteWheel.get(1));
+		
+		return selectedCreatures;
 	}
 
 }
