@@ -3,6 +3,7 @@ package main;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -29,18 +30,35 @@ public class Main
 			creatures.add(newCreature);
 		}
 		
+		long lastTime = System.currentTimeMillis();
+		long currentTime;
+		long elapsedTime;
+		
 		while(true)
 		{
-			update();
+			currentTime = System.currentTimeMillis();
+			elapsedTime = currentTime - lastTime;
+			
+			update(elapsedTime);
 			render();
+			
+			lastTime = currentTime;
 		}
 	}
 	
-	public static void update()
+	public static long moveTimer = 0;
+	
+	public static void update(long elapsedTime)
 	{
-		for (Creature creature : creatures) 
+		moveTimer += elapsedTime;
+		
+		if (moveTimer>50)
 		{
-			creature.testRandomMovement();
+			for (Creature creature : creatures) 
+			{
+				creature.testRandomMovement();
+			}
+			moveTimer = 0;
 		}
 	}
 	
