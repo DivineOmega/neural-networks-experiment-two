@@ -20,12 +20,6 @@ public class Creature
 		angle = random.nextDouble()*(Math.PI*2);
 	}
 	
-	public void randomizeMoveRate()
-	{
-		Random random = new Random();
-		moveRate = random.nextDouble() * 3.0;
-	}
-	
 	public void checkPosition()
 	{
 		if (x>600) {
@@ -58,7 +52,7 @@ public class Creature
 		angle += offset;
 	}
 	
-	public void testMoveForward()
+	public void moveForward()
 	{
 		x += (moveRate * Math.sin(angle));
 		y += (moveRate * Math.cos(angle));

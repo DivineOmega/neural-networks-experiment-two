@@ -1,24 +1,16 @@
 package main;
 
+import gui.MainWindow;
+
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.awt.Shape;
-import java.awt.geom.AffineTransform;
 import java.awt.geom.Arc2D;
 import java.awt.geom.Line2D;
-import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import java.sql.Time;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Random;
 
 import worldObjects.Creature;
 import worldObjects.FoodPellet;
-
-import gui.MainWindow;
 
 public class Main 
 {	
@@ -88,7 +80,7 @@ public class Main
 				}
 				
 				creature.adjustAngleRandomly();
-				creature.testMoveForward();
+				creature.moveForward();
 				
 				for (FoodPellet foodPellet : foodPellets) 
 				{
