@@ -10,8 +10,9 @@ public class Creature
 	public double x;
 	public double y;
 	public double angle;
-	public double diameter = 15.0;
+	public double diameter = 15.0;	
 	public double moveRate = 1.5;
+	public final double maxMoveRate = 3.0;
 	public double energy = 1;
 	
 	public NeuralNetwork neuralNetwork = new NeuralNetwork(); 
@@ -71,14 +72,17 @@ public class Creature
 		
 		inputs.add(xDistanceToClosest);
 		inputs.add(yDistanceToClosest);
+		inputs.add(energy);
 		
 		ArrayList<Double> outputs = neuralNetwork.update(inputs);
 		
-		double angle = -(2*Math.PI) + (outputs.get(0)*(4*Math.PI));
+		double angleOffset = -(2*Math.PI) + (outputs.get(0)*(4*Math.PI));
 		
-		adjustAngle(angle);
+		adjustAngle(angleOffset);
 		
-		if (outputs.get(1)>0.5) {
+		this.moveRate = outputs.get(1) * maxMoveRate;
+		
+		if (outputs.get(2)>0.5) {
 			moveForward();
 		}
 	}
