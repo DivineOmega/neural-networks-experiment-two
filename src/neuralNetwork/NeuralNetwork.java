@@ -4,16 +4,49 @@ import java.util.ArrayList;
 
 public class NeuralNetwork
 {
-	int numInputs;
-	int numOutputs;
+	int numInputs = 2;
+	int numOutputs = 2;
 	
-	int numHiddenLayers;
-	int numNeuronsPerHiddenLayer;
+	int numHiddenLayers = 1;
+	int numNeuronsPerHiddenLayer = 6;
 	
-	Double bias;
+	double bias = -1.0;
+	double activationResponse = 1.0;
 	
 	ArrayList<NeuronLayer> neuronLayers = new ArrayList<NeuronLayer>();
-	private double activationResponse;
+	
+	
+	public NeuralNetwork()
+	{
+		createNetwork();
+	}
+	
+	public void createNetwork()
+	{
+		//create the layers of the network
+		if (numHiddenLayers > 0)
+		{
+			//create first hidden layer
+			NeuronLayer firstHiddenLayer = new NeuronLayer(numNeuronsPerHiddenLayer, numInputs);
+			neuronLayers.add(firstHiddenLayer);
+	    
+		    for (int i=0; i<numHiddenLayers-1; ++i)
+		    {
+		    	NeuronLayer newHiddenLayer = new NeuronLayer(numNeuronsPerHiddenLayer, numNeuronsPerHiddenLayer);
+				neuronLayers.add(newHiddenLayer);
+		    }
+	
+		    //create output layer
+		    NeuronLayer outputLayer = new NeuronLayer(numOutputs, numNeuronsPerHiddenLayer);
+			neuronLayers.add(outputLayer);
+		}
+		else
+		{
+			//create output layer
+			NeuronLayer outputLayer = new NeuronLayer(numOutputs, numInputs);
+			neuronLayers.add(outputLayer);
+		}
+	}
 	
 	public ArrayList<Double> update(ArrayList<Double> inputs)
 	{
@@ -29,11 +62,14 @@ public class NeuralNetwork
 		
 		// Loop through all layers
 		boolean inputLayer = true;
-		for (NeuronLayer neuronLayer : neuronLayers)
+		for (int i=0; i < numHiddenLayers + 1; ++i)
 		{
+			NeuronLayer neuronLayer = neuronLayers.get(i);
+			
 			if (!inputLayer)
 			{
-				inputs = outputs;
+				inputs.clear();
+				inputs.addAll(outputs);
 			}
 			else
 			{
@@ -46,19 +82,18 @@ public class NeuralNetwork
 			
 			// For each neuron sum the (inputs * corresponding weights).
 			// Throw the total at our sigmoid function to get the output.
-			for (Neuron neuron : neuronLayer.neurons)
+			for (int j=0; j < neuronLayer.neurons.size()-1; ++j)
 			{
+				Neuron neuron = neuronLayer.neurons.get(j);
+				
 				double totalInput = 0;
 				
 				// For each weight...
-				for (Double weight : neuron.weights)
+				for (int k=0; k < neuron.weights.size() - 2; ++k)
 				{
-					// If it is not the final weight...
-					if (!weight.equals(neuron.weights.get(neuron.weights.size()-1)))
-					{
-						// Multiply it with the input.
-						totalInput += weight * inputs.get(cWeight++);
-					}
+					// Multiply it with the input.
+					totalInput += neuron.weights.get(k) * 
+							inputs.get(cWeight++);
 				}
 				
 				// Add in the bias (final weight)
@@ -77,6 +112,6 @@ public class NeuralNetwork
 
 	private Double sigmoid(double totalInput, double activationResponse)
 	{
-		return null;
+		return ( 1 / ( 1 + Math.exp(-totalInput / activationResponse)));
 	}
 }

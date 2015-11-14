@@ -79,8 +79,27 @@ public class Main
 					continue;
 				}
 				
-				creature.adjustAngleRandomly();
-				creature.moveForward();
+				double xDistanceToClosest = Double.MAX_VALUE;
+				double yDistanceToClosest = Double.MAX_VALUE;
+				
+				for (FoodPellet foodPellet : foodPellets)
+				{
+					double xDistance = Math.abs(foodPellet.x-creature.x);
+					
+					if (xDistance < xDistanceToClosest)
+					{
+						xDistanceToClosest = xDistance; 
+					}
+					
+					double yDistance = Math.abs(foodPellet.y-creature.y);
+					
+					if (yDistance < yDistanceToClosest)
+					{
+						yDistanceToClosest = yDistance; 
+					}
+				}
+				
+				creature.tick(xDistanceToClosest, yDistanceToClosest);
 				
 				for (FoodPellet foodPellet : foodPellets) 
 				{

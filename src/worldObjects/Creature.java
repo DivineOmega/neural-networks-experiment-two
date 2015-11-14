@@ -1,6 +1,9 @@
 package worldObjects;
 
+import java.util.ArrayList;
 import java.util.Random;
+
+import neuralNetwork.NeuralNetwork;
 
 public class Creature 
 {
@@ -10,6 +13,8 @@ public class Creature
 	public double diameter = 15.0;
 	public double moveRate = 1.5;
 	public double energy = 1;
+	
+	public NeuralNetwork neuralNetwork = new NeuralNetwork(); 
 	
 	public Creature() 
 	{
@@ -58,6 +63,22 @@ public class Creature
 		y += (moveRate * Math.cos(angle));
 		
 		checkPosition();
+	}
+	
+	public void tick(double xDistanceToClosest, double yDistanceToClosest)
+	{
+		ArrayList<Double> inputs = new ArrayList<Double>();
+		
+		inputs.add(xDistanceToClosest);
+		inputs.add(yDistanceToClosest);
+		
+		ArrayList<Double> outputs = neuralNetwork.update(inputs);
+		
+		adjustAngle(outputs.get(0)*(2*Math.PI));
+		
+		if (outputs.get(1)>0.5) {
+			moveForward();
+		}
 	}
 
 	public void reduceEnergy()

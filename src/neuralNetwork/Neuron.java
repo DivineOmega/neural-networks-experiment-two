@@ -5,16 +5,17 @@ import java.util.Random;
 
 public class Neuron
 {
-	private int numInputs;
 	public ArrayList<Double> weights = new ArrayList<Double>();
 	
-	public Neuron()
+	public Neuron(int numInputs)
 	{
 		Random random = new Random();
 		
-		for (Double weight : weights)
+		for (int i=0; i<numInputs+1; ++i)
 		{
-			weight = random.nextDouble();
+			double newWeight = random.nextDouble();
+			
+			weights.add(newWeight);
 		}
 	}
 }
