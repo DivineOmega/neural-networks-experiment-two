@@ -2,6 +2,13 @@ package main;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.awt.Shape;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Arc2D;
+import java.awt.geom.Line2D;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.sql.Time;
 import java.util.ArrayList;
@@ -56,7 +63,8 @@ public class Main
 		{
 			for (Creature creature : creatures) 
 			{
-				creature.testRandomMovement();
+				creature.testRandomAngle();
+				creature.testMoveForward();
 			}
 			moveTimer = 0;
 		}
@@ -65,16 +73,19 @@ public class Main
 	public static void render()
 	{
 		BufferedImage image = new BufferedImage(600, 600, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g2d = (Graphics2D) image.getGraphics();
 		
-		Graphics g = image.getGraphics();
+		g2d.setColor(Color.white);
+		g2d.fillRect(0, 0, 600, 600);
 		
-		g.setColor(Color.white);
-		g.fillRect(0, 0, 600, 600);
-		
-		g.setColor(Color.black);
+		g2d.setColor(Color.black);
 		for (Creature creature : creatures) 
 		{
-			g.drawRect(creature.x-5, creature.y-5, 10, 10);
+			Arc2D arc = new Arc2D.Double(creature.x-(creature.diameter/2), creature.y-(creature.diameter/2), creature.diameter, creature.diameter, 0, 360, Arc2D.OPEN);
+			Line2D line = new Line2D.Double(creature.x, creature.y, creature.x + (creature.diameter/2) * Math.sin(creature.angle), creature.y + (creature.diameter/2) * Math.cos(creature.angle));			
+			
+			g2d.draw(arc);
+			g2d.draw(line);
 		}
 		
 		mainWindow.drawPane.image = image;

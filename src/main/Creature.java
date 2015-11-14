@@ -4,8 +4,11 @@ import java.util.Random;
 
 public class Creature 
 {
-	public int x;
-	public int y;
+	public double x;
+	public double y;
+	public double angle;
+	public double diameter = 15.0;
+	public double moveRate = 1.5;
 	
 	public Creature() 
 	{
@@ -13,14 +16,41 @@ public class Creature
 		
 		x = random.nextInt(600);
 		y = random.nextInt(600);
+		angle = random.nextDouble()*(Math.PI*2);
 	}
 	
-	public void testRandomMovement()
+	public void checkPosition()
+	{
+		if (x>600) {
+			x -= 600;
+		}
+		
+		if (x<0) {
+			x += 600;
+		}
+		
+		if (y<0) {
+			y += 600;
+		}
+		
+		if (y>600) {
+			y -= 600;
+		}
+	}
+	
+	public void testRandomAngle()
 	{
 		Random random = new Random();
 		
-		x += -1 + random.nextInt(3);
-		y += -1 + random.nextInt(3);
+		angle += -((Math.PI*2)*0.02) + (random.nextDouble()*((Math.PI*2)*0.04));
+	}
+	
+	public void testMoveForward()
+	{
+		x += (moveRate * Math.sin(angle));
+		y += (moveRate * Math.cos(angle));
+		
+		checkPosition();
 	}
 }
 
