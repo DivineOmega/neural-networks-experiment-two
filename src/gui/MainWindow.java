@@ -11,6 +11,7 @@ public class MainWindow extends JFrame
 		drawPane = new DrawPane();
 		add(drawPane);
 		
+		setResizable(false);
 		setSize(600, 600);
 		setTitle("Neural Networks - Experiment One");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

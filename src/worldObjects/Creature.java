@@ -1,4 +1,4 @@
-package main;
+package worldObjects;
 
 import java.util.Random;
 
@@ -9,6 +9,7 @@ public class Creature
 	public double angle;
 	public double diameter = 15.0;
 	public double moveRate = 1.5;
+	public double energy = 1;
 	
 	public Creature() 
 	{
@@ -63,6 +64,16 @@ public class Creature
 		y += (moveRate * Math.cos(angle));
 		
 		checkPosition();
+	}
+
+	public void reduceEnergy()
+	{
+		energy -= 0.001;
+	}
+	
+	public boolean isDead()
+	{
+		return (energy<=0);
 	}
 }
 
