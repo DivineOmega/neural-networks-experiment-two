@@ -116,4 +116,46 @@ public class NeuralNetwork
 	{
 		return ( 1 / ( 1 + Math.exp(-totalInput / activationResponse)));
 	}
+	
+	public ArrayList<Double> GetWeights()
+	{
+		ArrayList<Double> weights = new ArrayList<Double>();
+		
+		//for each layer
+		for (int i=0; i<neuronLayers.size() + 1; ++i)
+		{
+
+			//for each neuron
+			for (int j=0; j<neuronLayers.get(i).neurons.size(); ++j)
+			{
+				//for each weight
+				for (int k=0; k<neuronLayers.get(i).neurons.get(j).numInputs; ++k)
+				{
+					weights.add(neuronLayers.get(i).neurons.get(j).weights.get(k));
+				}
+			}
+		}
+
+		return weights;
+	}
+	
+	public void PutWeights(ArrayList<Double> weights)
+	{
+		int cWeight = 0;
+		
+		//for each layer
+		for (int i=0; i<neuronLayers.size() + 1; ++i)
+		{
+
+			//for each neuron
+			for (int j=0; j<neuronLayers.get(i).neurons.size(); ++j)
+			{
+				//for each weight
+				for (int k=0; k<neuronLayers.get(i).neurons.get(j).numInputs; ++k)
+				{
+					neuronLayers.get(i).neurons.get(j).weights.add(weights.get(cWeight++));
+				}
+			}
+		}
+	}
 }
