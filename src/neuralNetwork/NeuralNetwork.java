@@ -82,18 +82,20 @@ public class NeuralNetwork
 			
 			// For each neuron sum the (inputs * corresponding weights).
 			// Throw the total at our sigmoid function to get the output.
-			for (int j=0; j < neuronLayer.neurons.size()-1; ++j)
+			for (int j=0; j < neuronLayer.neurons.size(); ++j)
 			{
 				Neuron neuron = neuronLayer.neurons.get(j);
 				
 				double totalInput = 0;
 				
 				// For each weight...
-				for (int k=0; k < neuron.weights.size() - 2; ++k)
+				for (int k=0; k < neuron.numInputs - 1; ++k)
 				{
 					// Multiply it with the input.
 					totalInput += neuron.weights.get(k) * 
-							inputs.get(cWeight++);
+							inputs.get(cWeight);
+					
+					cWeight++;
 				}
 				
 				// Add in the bias (final weight)

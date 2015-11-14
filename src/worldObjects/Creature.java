@@ -74,7 +74,9 @@ public class Creature
 		
 		ArrayList<Double> outputs = neuralNetwork.update(inputs);
 		
-		adjustAngle(outputs.get(0)*(2*Math.PI));
+		double angle = -(2*Math.PI) + (outputs.get(0)*(4*Math.PI));
+		
+		adjustAngle(angle);
 		
 		if (outputs.get(1)>0.5) {
 			moveForward();
