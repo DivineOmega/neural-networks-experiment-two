@@ -32,20 +32,24 @@ public class Creature
 	
 	public void checkPosition()
 	{
-		if (x>600) {
-			x -= 600;
+		while (x>600) 
+		{
+			x -= 1;
 		}
 		
-		if (x<0) {
-			x += 600;
+		while (x<0) 
+		{
+			x += 1;
 		}
 		
-		if (y<0) {
-			y += 600;
+		while (y>600) 
+		{
+			y -= 1;
 		}
 		
-		if (y>600) {
-			y -= 600;
+		while (y<0) 
+		{
+			y += 1;
 		}
 	}
 	
@@ -70,12 +74,13 @@ public class Creature
 		checkPosition();
 	}
 	
-	public void tick(double xDistanceToClosest, double yDistanceToClosest)
+	public void tick(double distanceToClosestFood, double angleToClosestFood)
 	{
 		ArrayList<Double> inputs = new ArrayList<Double>();
 		
-		inputs.add(xDistanceToClosest);
-		inputs.add(yDistanceToClosest);
+		inputs.add(distanceToClosestFood);
+		inputs.add(angleToClosestFood);
+		inputs.add(angle);
 		
 		ArrayList<Double> outputs = neuralNetwork.update(inputs);
 		
@@ -85,14 +90,12 @@ public class Creature
 		
 		this.moveRate = outputs.get(1) * maxMoveRate;
 		
-		if (outputs.get(2)>0.5) {
-			moveForward();
-		}
+		moveForward();
 	}
 
 	public void reduceEnergy()
 	{
-		energy -= 0.003;
+		energy -= 0.005;
 	}
 	
 	public boolean isDead()

@@ -4,8 +4,10 @@ import gui.MainWindow;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.geom.Arc2D;
 import java.awt.geom.Line2D;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,7 +23,7 @@ public class Main
 	public static int populationSize = 30;
 	public static ArrayList<Creature> creatures = new ArrayList<Creature>();
 	
-	public static int amountOfFood = 120;
+	public static int amountOfFood = 200;
 	public static ArrayList<FoodPellet> foodPellets = new ArrayList<FoodPellet>();
 	
 	public static void main(String[] args) 
@@ -95,27 +97,25 @@ public class Main
 					continue;
 				}
 				
-				double xDistanceToClosest = Double.MAX_VALUE;
-				double yDistanceToClosest = Double.MAX_VALUE;
+				double distanceToClosestFood = Double.MAX_VALUE;
+				double angleToClosestFood = 0;
+				
+				Point2D creatureLocation = new Point2D.Double(creature.x, creature.y);
 				
 				for (FoodPellet foodPellet : foodPellets)
 				{
-					double xDistance = Math.abs(foodPellet.x-creature.x);
+					Point2D foodLocation = new Point2D.Double(foodPellet.x, foodPellet.y);
 					
-					if (xDistance < xDistanceToClosest)
+					double distanceToFood = creatureLocation.distance(foodLocation);
+					
+					if (distanceToFood < distanceToClosestFood)
 					{
-						xDistanceToClosest = xDistance; 
-					}
-					
-					double yDistance = Math.abs(foodPellet.y-creature.y);
-					
-					if (yDistance < yDistanceToClosest)
-					{
-						yDistanceToClosest = yDistance; 
+						distanceToClosestFood = distanceToFood;
+						angleToClosestFood = Math.atan2(creature.x - foodPellet.x, creature.x - foodPellet.y);
 					}
 				}
-				
-				creature.tick(xDistanceToClosest, yDistanceToClosest);
+								
+				creature.tick(distanceToClosestFood, angleToClosestFood);
 				
 				for (FoodPellet foodPellet : foodPellets) 
 				{
