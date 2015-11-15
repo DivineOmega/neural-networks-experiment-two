@@ -74,14 +74,8 @@ public class Creature
 		checkPosition();
 	}
 	
-	public void tick(double distanceToClosestFood, double angleToClosestFood)
+	public void tick(ArrayList<Double> inputs)
 	{
-		ArrayList<Double> inputs = new ArrayList<Double>();
-		
-		inputs.add(distanceToClosestFood);
-		inputs.add(angleToClosestFood);
-		inputs.add(angle);
-		
 		ArrayList<Double> outputs = neuralNetwork.update(inputs);
 		
 		double angleOffset = -(2*Math.PI) + (outputs.get(0)*(4*Math.PI));
@@ -95,7 +89,7 @@ public class Creature
 
 	public void reduceEnergy()
 	{
-		energy -= 0.005;
+		energy -= 0.001;
 	}
 	
 	public boolean isDead()
@@ -112,11 +106,14 @@ public class Creature
 		return genome;
 	}
 	
-	public ArrayList<Double> setGenome(ArrayList<Double> genome)
+	public void setGenome(ArrayList<Double> genome)
 	{
-		neuralNetwork.setWeights(genome);
+		ArrayList<Double> weights = new ArrayList<Double>();
 		
-		return genome;
+		weights.addAll(genome);
+		
+		neuralNetwork.setWeights(weights);
+		
 	}
 }
 

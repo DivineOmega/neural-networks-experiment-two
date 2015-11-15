@@ -4,7 +4,6 @@ import gui.MainWindow;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.geom.Arc2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
@@ -20,14 +19,19 @@ public class Main
 {	
 	public static MainWindow mainWindow;
 	
-	public static int populationSize = 30;
+	public static long timer = 0;
+	public static long tickInterval = 0;
+	
+	public static int populationSize = 40;
 	public static ArrayList<Creature> creatures = new ArrayList<Creature>();
 	
-	public static int amountOfFood = 200;
+	public static int amountOfFood = 300;
 	public static ArrayList<FoodPellet> foodPellets = new ArrayList<FoodPellet>();
 	
 	public static void main(String[] args) 
 	{
+		simulationSpeedReset();
+		
 		mainWindow = new MainWindow();
 		mainWindow.setVisible(true);
 						
@@ -47,8 +51,7 @@ public class Main
 		}
 	}
 	
-	public static long timer = 0;
-	public static long tickInterval = 50;
+	
 	
 	public static void update(long elapsedTime)
 	{
@@ -69,7 +72,6 @@ public class Main
 				ArrayList<Creature> newCreatures = new ArrayList<Creature>();
 				
 				Creature bestCreature = eliteSelection();
-				newCreatures.add(bestCreature);
 				
 				Creature mutatedBestCreature = GenomeUtils.crossover(bestCreature, bestCreature);
 				newCreatures.add(mutatedBestCreature);
@@ -78,8 +80,10 @@ public class Main
 				{
 					ArrayList<Creature> parents = rouletteWheelSelection();
 					Creature childCreature = GenomeUtils.crossover(parents.get(0), parents.get(1));
+					Creature secondChildCreature = GenomeUtils.crossover(parents.get(1), parents.get(0));
 					
 					newCreatures.add(childCreature);
+					newCreatures.add(secondChildCreature);
 				}
 				
 				creatures.addAll(newCreatures);
@@ -93,7 +97,7 @@ public class Main
 			
 			ArrayList<Creature> deadCreatures = new ArrayList<Creature>();
 			ArrayList<FoodPellet> eatenFoodPellets = new ArrayList<FoodPellet>();
-			
+						
 			for (Creature creature : creatures) 
 			{
 				creature.reduceEnergy();
@@ -108,6 +112,8 @@ public class Main
 				
 				Point2D creatureLocation = new Point2D.Double(creature.x, creature.y);
 				
+				FoodPellet closestFoodPellet = null;
+				
 				for (FoodPellet foodPellet : foodPellets)
 				{
 					Point2D foodLocation = new Point2D.Double(foodPellet.x, foodPellet.y);
@@ -117,11 +123,18 @@ public class Main
 					if (distanceToFood < distanceToClosestFood)
 					{
 						distanceToClosestFood = distanceToFood;
-						angleToClosestFood = Math.atan2(creature.x - foodPellet.x, creature.x - foodPellet.y);
+						angleToClosestFood = Math.atan2(foodPellet.x - creature.x, foodPellet.x - creature.y);
+						closestFoodPellet = foodPellet;
 					}
 				}
+				
+				ArrayList<Double> inputs = new ArrayList<Double>();
+				
+				inputs.add(distanceToClosestFood);
+				inputs.add(angleToClosestFood);
+				inputs.add(creature.angle);
 								
-				creature.tick(distanceToClosestFood, angleToClosestFood);
+				creature.tick(inputs);
 				
 				for (FoodPellet foodPellet : foodPellets) 
 				{
@@ -162,7 +175,7 @@ public class Main
 		
 		g2d.setColor(Color.white);
 		for (Creature creature : creatures) 
-		{
+		{			
 			Arc2D arc = new Arc2D.Double(creature.x-(creature.diameter/2), creature.y-(creature.diameter/2), creature.diameter, creature.diameter, 0, 360, Arc2D.OPEN);
 			Line2D line = new Line2D.Double(creature.x, creature.y, creature.x + (creature.diameter/2) * Math.sin(creature.angle), creature.y + (creature.diameter/2) * Math.cos(creature.angle));			
 			
@@ -199,10 +212,18 @@ public class Main
 		ArrayList<Creature> routletteWheel = new ArrayList<Creature>();
 		
 		for (Creature creature : creatures) 
-		{			
-			for (double i = 0; i < creature.energy; i+=0.0001) 
+		{
+			int routletteWheelEntryCount = 0;
+			
+			for (double i = 0; i < creature.energy; i+=0.1) 
 			{
 				routletteWheel.add(creature);
+				routletteWheelEntryCount++;
+				
+				if (routletteWheelEntryCount>=100)
+				{
+					break;
+				}
 			}
 		}
 		
@@ -221,7 +242,7 @@ public class Main
 		
 		for (Creature creature : creatures) 
 		{			
-			if (creature.energy > highestEnergy)
+			if (creature.energy >= highestEnergy)
 			{
 				highestEnergy = creature.energy;
 				bestCreature = creature;
@@ -230,5 +251,23 @@ public class Main
 		
 		return bestCreature;
 	}
-
+	
+	public static void simulationSpeedUp()
+	{
+		if (tickInterval>0)
+		{
+			tickInterval -= 5;
+		}
+	}
+	
+	public static void simulationSpeedDown()
+	{
+		tickInterval += 5;
+	}
+	
+	public static void simulationSpeedReset()
+	{
+		tickInterval = 75;
+	}
+	
 }

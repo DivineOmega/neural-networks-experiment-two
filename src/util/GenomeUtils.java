@@ -12,7 +12,26 @@ public abstract class GenomeUtils
 	{
 		Random random = new Random();
 		
-		ArrayList<Double> childGenome = mum.getGenome();
+		System.out.println("New cross over.");
+		
+		System.out.print("Mum: ");
+		for (Double genomePart : mum.getGenome()) {
+			System.out.print(genomePart);
+			System.out.print("|");
+		}
+		System.out.println();
+		
+		System.out.print("Dad: ");
+		for (Double genomePart : dad.getGenome()) {
+			System.out.print(genomePart);
+			System.out.print("|");
+		}
+		System.out.println();
+		
+		ArrayList<Double> mumGenome = mum.getGenome();
+		
+		ArrayList<Double> childGenome = new ArrayList<Double>();
+		childGenome.addAll(mumGenome);
 		
 		if (random.nextFloat()<=0.7)
 		{
@@ -20,14 +39,12 @@ public abstract class GenomeUtils
 			
 			ArrayList<Double> dadGenome = dad.getGenome();
 			
-			int genomePartCount = 0;
 			for (int i = 0; i < childGenome.size(); i++)
 			{
-				if (genomePartCount>crossOverPoint)
+				if (i>crossOverPoint)
 				{
-					childGenome.set(genomePartCount, dadGenome.get(genomePartCount));
+					childGenome.set(i, dadGenome.get(i));
 				}
-				genomePartCount++;
 			}
 		}
 		
@@ -44,6 +61,13 @@ public abstract class GenomeUtils
 		Creature child = new Creature();
 		child.setGenome(childGenome);
 		child.generation = Math.min(mum.generation, dad.generation) + 1;
+		
+		System.out.print("Chi: ");
+		for (Double genomePart : child.getGenome()) {
+			System.out.print(genomePart);
+			System.out.print("|");
+		}
+		System.out.println();
 		
 		return child;
 	}

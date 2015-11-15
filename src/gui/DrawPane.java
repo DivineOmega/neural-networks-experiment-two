@@ -10,7 +10,7 @@ import javax.swing.JPanel;
 public class DrawPane extends JPanel
 {
 	public Image image;
-
+	
 	@Override
 	public void paintComponent(Graphics g) 
 	{
