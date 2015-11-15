@@ -128,7 +128,6 @@ public class Main
 				inputs.add(distanceToClosestFood);
 				inputs.add(angleToClosestFood);
 				inputs.add(creature.angle);
-				inputs.add(creature.energy);
 								
 				creature.tick(inputs);
 				

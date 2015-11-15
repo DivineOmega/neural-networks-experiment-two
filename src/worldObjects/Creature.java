@@ -19,7 +19,7 @@ public class Creature
 	public final double maxMoveRate = 3.0;
 	public double energy = 1;
 	public int lifeSpan = 0;
-	public final int oldAge = 100000;
+	public final int oldAge = 10000;
 	
 	public NeuralNetwork neuralNetwork = new NeuralNetwork(); 
 	
