@@ -18,6 +18,8 @@ public class Creature
 	public double moveRate = 1.5;
 	public final double maxMoveRate = 3.0;
 	public double energy = 1;
+	public int lifeSpan = 0;
+	public final int oldAge = 100000;
 	
 	public NeuralNetwork neuralNetwork = new NeuralNetwork(); 
 	
@@ -34,22 +36,22 @@ public class Creature
 	{
 		while (x>600) 
 		{
-			x -= 1;
+			x -= 600;
 		}
 		
 		while (x<0) 
 		{
-			x += 1;
+			x += 600;
 		}
 		
 		while (y>600) 
 		{
-			y -= 1;
+			y -= 600;
 		}
 		
 		while (y<0) 
 		{
-			y += 1;
+			y += 600;
 		}
 	}
 	
@@ -64,6 +66,16 @@ public class Creature
 	public void adjustAngle(double offset)
 	{
 		angle += offset;
+		
+		while (angle > (2*Math.PI))
+		{
+			angle -= (2*Math.PI);
+		}
+		
+		while (angle < 0)
+		{
+			angle += (2*Math.PI);
+		}
 	}
 	
 	public void moveForward()
@@ -79,7 +91,7 @@ public class Creature
 		ArrayList<Double> outputs = neuralNetwork.update(inputs);
 		
 		double angleOffset = -(2*Math.PI) + (outputs.get(0)*(4*Math.PI));
-		
+				
 		adjustAngle(angleOffset);
 		
 		this.moveRate = outputs.get(1) * maxMoveRate;
@@ -89,7 +101,16 @@ public class Creature
 
 	public void reduceEnergy()
 	{
-		energy -= 0.001;
+		lifeSpan++;
+		
+		if (lifeSpan>oldAge)
+		{
+			energy -= 0.1;
+		}
+		else
+		{
+			energy -= 0.001;
+		}
 	}
 	
 	public boolean isDead()

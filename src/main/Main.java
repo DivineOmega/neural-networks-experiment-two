@@ -22,10 +22,10 @@ public class Main
 	public static long timer = 0;
 	public static long tickInterval = 0;
 	
-	public static int populationSize = 40;
+	public static int populationSize = 30;
 	public static ArrayList<Creature> creatures = new ArrayList<Creature>();
 	
-	public static int amountOfFood = 300;
+	public static int amountOfFood = 40;
 	public static ArrayList<FoodPellet> foodPellets = new ArrayList<FoodPellet>();
 	
 	public static void main(String[] args) 
@@ -70,12 +70,7 @@ public class Main
 			else if (creatures.size() < populationSize)
 			{
 				ArrayList<Creature> newCreatures = new ArrayList<Creature>();
-				
-				Creature bestCreature = eliteSelection();
-				
-				Creature mutatedBestCreature = GenomeUtils.crossover(bestCreature, bestCreature);
-				newCreatures.add(mutatedBestCreature);
-				
+								
 				while (newCreatures.size() < populationSize - creatures.size())
 				{
 					ArrayList<Creature> parents = rouletteWheelSelection();
@@ -123,7 +118,7 @@ public class Main
 					if (distanceToFood < distanceToClosestFood)
 					{
 						distanceToClosestFood = distanceToFood;
-						angleToClosestFood = Math.atan2(foodPellet.x - creature.x, foodPellet.x - creature.y);
+						angleToClosestFood = creature.angle - Math.atan2(foodPellet.x - creature.x, foodPellet.x - creature.y);
 						closestFoodPellet = foodPellet;
 					}
 				}
@@ -132,7 +127,6 @@ public class Main
 				
 				inputs.add(distanceToClosestFood);
 				inputs.add(angleToClosestFood);
-				inputs.add(creature.angle);
 								
 				creature.tick(inputs);
 				
@@ -173,9 +167,18 @@ public class Main
 		g2d.setColor(Color.darkGray);
 		g2d.fillRect(0, 0, 600, 600);
 		
-		g2d.setColor(Color.white);
+		
 		for (Creature creature : creatures) 
-		{			
+		{
+			if (creature.lifeSpan>creature.oldAge)
+			{
+				g2d.setColor(Color.red);
+			}
+			else
+			{
+				g2d.setColor(Color.white);
+			}
+			
 			Arc2D arc = new Arc2D.Double(creature.x-(creature.diameter/2), creature.y-(creature.diameter/2), creature.diameter, creature.diameter, 0, 360, Arc2D.OPEN);
 			Line2D line = new Line2D.Double(creature.x, creature.y, creature.x + (creature.diameter/2) * Math.sin(creature.angle), creature.y + (creature.diameter/2) * Math.cos(creature.angle));			
 			
@@ -213,14 +216,11 @@ public class Main
 		
 		for (Creature creature : creatures) 
 		{
-			int routletteWheelEntryCount = 0;
-			
 			for (double i = 0; i < creature.energy; i+=0.1) 
 			{
 				routletteWheel.add(creature);
-				routletteWheelEntryCount++;
 				
-				if (routletteWheelEntryCount>=1000)
+				if (i>=1000)
 				{
 					break;
 				}
@@ -234,24 +234,7 @@ public class Main
 		
 		return selectedCreatures;
 	}
-	
-	public static Creature eliteSelection()
-	{
-		double highestEnergy = 0;
-		Creature bestCreature = null;
 		
-		for (Creature creature : creatures) 
-		{			
-			if (creature.energy >= highestEnergy)
-			{
-				highestEnergy = creature.energy;
-				bestCreature = creature;
-			}
-		}
-		
-		return bestCreature;
-	}
-	
 	public static void simulationSpeedUp()
 	{
 		if (tickInterval>0)

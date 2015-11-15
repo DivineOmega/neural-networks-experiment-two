@@ -11,23 +11,7 @@ public abstract class GenomeUtils
 	public static Creature crossover(Creature mum, Creature dad)
 	{
 		Random random = new Random();
-		
-		System.out.println("New cross over.");
-		
-		System.out.print("Mum: ");
-		for (Double genomePart : mum.getGenome()) {
-			System.out.print(genomePart);
-			System.out.print("|");
-		}
-		System.out.println();
-		
-		System.out.print("Dad: ");
-		for (Double genomePart : dad.getGenome()) {
-			System.out.print(genomePart);
-			System.out.print("|");
-		}
-		System.out.println();
-		
+				
 		ArrayList<Double> mumGenome = mum.getGenome();
 		
 		ArrayList<Double> childGenome = new ArrayList<Double>();
@@ -61,14 +45,7 @@ public abstract class GenomeUtils
 		Creature child = new Creature();
 		child.setGenome(childGenome);
 		child.generation = Math.min(mum.generation, dad.generation) + 1;
-		
-		System.out.print("Chi: ");
-		for (Double genomePart : child.getGenome()) {
-			System.out.print(genomePart);
-			System.out.print("|");
-		}
-		System.out.println();
-		
+				
 		return child;
 	}
 	
