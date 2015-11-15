@@ -7,7 +7,7 @@ public class NeuralNetwork
 	int numInputs = 3;
 	int numOutputs = 2;
 	
-	int numHiddenLayers = 2;
+	int numHiddenLayers = 1;
 	int numNeuronsPerHiddenLayer = 6;
 	
 	double bias = -1.0;

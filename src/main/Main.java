@@ -220,7 +220,7 @@ public class Main
 				routletteWheel.add(creature);
 				routletteWheelEntryCount++;
 				
-				if (routletteWheelEntryCount>=100)
+				if (routletteWheelEntryCount>=1000)
 				{
 					break;
 				}
