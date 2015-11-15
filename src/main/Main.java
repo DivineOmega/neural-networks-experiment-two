@@ -68,6 +68,12 @@ public class Main
 			{
 				ArrayList<Creature> newCreatures = new ArrayList<Creature>();
 				
+				Creature bestCreature = eliteSelection();
+				newCreatures.add(bestCreature);
+				
+				Creature mutatedBestCreature = GenomeUtils.crossover(bestCreature, bestCreature);
+				newCreatures.add(mutatedBestCreature);
+				
 				while (newCreatures.size() < populationSize - creatures.size())
 				{
 					ArrayList<Creature> parents = rouletteWheelSelection();
@@ -206,6 +212,23 @@ public class Main
 		selectedCreatures.add(routletteWheel.get(1));
 		
 		return selectedCreatures;
+	}
+	
+	public static Creature eliteSelection()
+	{
+		double highestEnergy = 0;
+		Creature bestCreature = null;
+		
+		for (Creature creature : creatures) 
+		{			
+			if (creature.energy > highestEnergy)
+			{
+				highestEnergy = creature.energy;
+				bestCreature = creature;
+			}
+		}
+		
+		return bestCreature;
 	}
 
 }
