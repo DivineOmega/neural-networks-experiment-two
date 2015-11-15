@@ -118,7 +118,7 @@ public class Main
 					if (distanceToFood < distanceToClosestFood)
 					{
 						distanceToClosestFood = distanceToFood;
-						angleToClosestFood = creature.angle - Math.atan2(foodPellet.x - creature.x, foodPellet.x - creature.y);
+						angleToClosestFood = Math.atan2(foodPellet.x - creature.x, foodPellet.x - creature.y);
 						closestFoodPellet = foodPellet;
 					}
 				}
@@ -127,6 +127,8 @@ public class Main
 				
 				inputs.add(distanceToClosestFood);
 				inputs.add(angleToClosestFood);
+				inputs.add(creature.angle);
+				inputs.add(creature.energy);
 								
 				creature.tick(inputs);
 				
