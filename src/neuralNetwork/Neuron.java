@@ -16,7 +16,7 @@ public class Neuron
 		
 		for (int i=0; i<numInputs+1; ++i)
 		{
-			double newWeight = random.nextDouble();
+			double newWeight = -1 + (random.nextDouble()*2);
 			
 			weights.add(newWeight);
 		}
