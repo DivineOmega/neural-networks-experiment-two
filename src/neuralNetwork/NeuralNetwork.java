@@ -153,7 +153,7 @@ public class NeuralNetwork
 				//for each weight
 				for (int k=0; k<neuronLayers.get(i).neurons.get(j).numInputs; ++k)
 				{
-					neuronLayers.get(i).neurons.get(j).weights.add(weights.get(cWeight++));
+					neuronLayers.get(i).neurons.get(j).weights.set(k, weights.get(cWeight++));
 				}
 			}
 		}
