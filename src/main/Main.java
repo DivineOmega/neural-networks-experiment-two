@@ -118,7 +118,7 @@ public class Main
 					if (distanceToFood < distanceToClosestFood)
 					{
 						distanceToClosestFood = distanceToFood;
-						angleToClosestFood = Math.atan2(foodPellet.x - creature.x, foodPellet.x - creature.y);
+						angleToClosestFood = Math.atan2(foodPellet.x - creature.x, foodPellet.y - creature.y);
 						closestFoodPellet = foodPellet;
 					}
 				}
@@ -240,13 +240,18 @@ public class Main
 	{
 		if (tickInterval>0)
 		{
-			tickInterval -= 5;
+			tickInterval -= 1;
+		}
+		
+		if (tickInterval<=0)
+		{
+			tickInterval = 1;
 		}
 	}
 	
 	public static void simulationSpeedDown()
 	{
-		tickInterval += 5;
+		tickInterval += 1;
 	}
 	
 	public static void simulationSpeedReset()
