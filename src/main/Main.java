@@ -107,8 +107,6 @@ public class Main
 				
 				Point2D creatureLocation = new Point2D.Double(creature.x, creature.y);
 				
-				FoodPellet closestFoodPellet = null;
-				
 				for (FoodPellet foodPellet : foodPellets)
 				{
 					Point2D foodLocation = new Point2D.Double(foodPellet.x, foodPellet.y);
@@ -118,8 +116,13 @@ public class Main
 					if (distanceToFood < distanceToClosestFood)
 					{
 						distanceToClosestFood = distanceToFood;
-						angleToClosestFood = Math.atan2(foodPellet.x - creature.x, foodPellet.y - creature.y);
-						closestFoodPellet = foodPellet;
+						
+						angleToClosestFood = Math.atan2(foodPellet.y - creature.y, foodPellet.x - creature.x);
+						
+						if (angleToClosestFood<0)
+						{
+							angleToClosestFood += 2*Math.PI;
+						}
 					}
 				}
 				
