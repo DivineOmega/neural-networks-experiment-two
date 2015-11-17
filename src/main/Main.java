@@ -213,15 +213,17 @@ public class Main
 	{
 		ArrayList<Creature> selectedCreatures = new ArrayList<Creature>();
 		
-		ArrayList<Creature> routletteWheel = new ArrayList<Creature>();
+		ArrayList<Integer> routletteWheel = new ArrayList<Integer>();
 		
-		for (Creature creature : creatures) 
+		for (int i = 0; i < creatures.size(); i++)
 		{
-			for (double i = 0; i < creature.energy; i+=0.1) 
+			Creature creature = creatures.get(i);
+			
+			for (double j = 0; j < creature.energy; j+=0.1) 
 			{
-				routletteWheel.add(creature);
+				routletteWheel.add(i);
 				
-				if (i>=1000)
+				if (j>=1000)
 				{
 					break;
 				}
@@ -230,8 +232,8 @@ public class Main
 		
 		Collections.shuffle(routletteWheel);
 		
-		selectedCreatures.add(routletteWheel.get(0));
-		selectedCreatures.add(routletteWheel.get(1));
+		selectedCreatures.add(creatures.get(routletteWheel.get(0)));
+		selectedCreatures.add(creatures.get(routletteWheel.get(1)));
 		
 		return selectedCreatures;
 	}
