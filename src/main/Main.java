@@ -128,7 +128,6 @@ public class Main
 				
 				ArrayList<Double> inputs = new ArrayList<Double>();
 				
-				inputs.add(distanceToClosestFood);
 				inputs.add(angleToClosestFood);
 				inputs.add(creature.angle);
 								
