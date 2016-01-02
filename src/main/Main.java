@@ -25,7 +25,7 @@ public class Main
 	public static int populationSize = 30;
 	public static ArrayList<Creature> creatures = new ArrayList<Creature>();
 	
-	public static int amountOfFood = 40;
+	public static int amountOfFood = 20;
 	public static ArrayList<FoodPellet> foodPellets = new ArrayList<FoodPellet>();
 	
 	public static void main(String[] args) 
@@ -135,7 +135,9 @@ public class Main
 				
 				inputs.add(vectorXToClosestFood);
 				inputs.add(vectorYToClosestFood);
-				inputs.add(creature.angle);
+				
+				inputs.add(-Math.sin(creature.angle));
+				inputs.add(Math.cos(creature.angle));
 								
 				creature.tick(inputs);
 				
