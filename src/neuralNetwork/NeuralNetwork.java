@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class NeuralNetwork
 {
-	int numInputs = 2;
+	int numInputs = 3;
 	int numOutputs = 2;
 	
 	int numHiddenLayers = 1;

@@ -104,6 +104,8 @@ public class Main
 				
 				double distanceToClosestFood = Double.MAX_VALUE;
 				double angleToClosestFood = 0;
+				double vectorXToClosestFood = 0;
+				double vectorYToClosestFood = 0;
 				
 				Point2D creatureLocation = new Point2D.Double(creature.x, creature.y);
 				
@@ -123,12 +125,16 @@ public class Main
 						{
 							angleToClosestFood += 2*Math.PI;
 						}
+						
+						vectorXToClosestFood = foodPellet.x - creature.x;
+						vectorYToClosestFood = foodPellet.y - creature.y;
 					}
 				}
 				
 				ArrayList<Double> inputs = new ArrayList<Double>();
 				
-				inputs.add(angleToClosestFood);
+				inputs.add(vectorXToClosestFood);
+				inputs.add(vectorYToClosestFood);
 				inputs.add(creature.angle);
 								
 				creature.tick(inputs);
