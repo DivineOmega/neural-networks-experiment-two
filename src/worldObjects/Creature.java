@@ -90,7 +90,7 @@ public class Creature
 	{
 		ArrayList<Double> outputs = neuralNetwork.update(inputs);
 		
-		double angleOffset = -(2*Math.PI) + (outputs.get(0)*(4*Math.PI));
+		double angleOffset = -(Math.PI*0.1) + (outputs.get(0)*(Math.PI*0.2));
 				
 		adjustAngle(angleOffset);
 		
