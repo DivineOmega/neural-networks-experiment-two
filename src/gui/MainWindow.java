@@ -18,7 +18,7 @@ public class MainWindow extends JFrame implements KeyListener
 		add(drawPane);
 		
 		setResizable(false);
-		setSize(600, 600);
+		setSize(800, 800);
 		setTitle("Neural Networks - Experiment One");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		

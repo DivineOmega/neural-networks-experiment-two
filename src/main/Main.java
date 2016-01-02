@@ -164,11 +164,11 @@ public class Main
 	
 	public static void render()
 	{
-		BufferedImage image = new BufferedImage(600, 600, BufferedImage.TYPE_INT_ARGB);
+		BufferedImage image = new BufferedImage(800, 800, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2d = (Graphics2D) image.getGraphics();
 		
 		g2d.setColor(Color.darkGray);
-		g2d.fillRect(0, 0, 600, 600);
+		g2d.fillRect(0, 0, 800, 800);
 		
 		
 		for (Creature creature : creatures) 

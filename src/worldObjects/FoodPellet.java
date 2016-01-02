@@ -12,7 +12,7 @@ public class FoodPellet
 	{
 		Random random = new Random();
 		
-		x = random.nextInt(600);
-		y = random.nextInt(600);
+		x = random.nextInt(800);
+		y = random.nextInt(800);
 	}
 }

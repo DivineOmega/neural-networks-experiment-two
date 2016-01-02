@@ -27,31 +27,31 @@ public class Creature
 	{
 		Random random = new Random();
 		
-		x = random.nextInt(600);
-		y = random.nextInt(600);
+		x = random.nextInt(800);
+		y = random.nextInt(800);
 		angle = random.nextDouble()*(Math.PI*2);
 	}
 	
 	public void checkPosition()
 	{
-		while (x>600) 
+		while (x>800) 
 		{
-			x -= 600;
+			x -= 800;
 		}
 		
 		while (x<0) 
 		{
-			x += 600;
+			x += 800;
 		}
 		
-		while (y>600) 
+		while (y>800) 
 		{
-			y -= 600;
+			y -= 800;
 		}
 		
 		while (y<0) 
 		{
-			y += 600;
+			y += 800;
 		}
 	}
 	
