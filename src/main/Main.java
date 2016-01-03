@@ -22,10 +22,13 @@ public class Main
 	public static long timer = 0;
 	public static long tickInterval = 0;
 	
-	public static int populationSize = 30;
+	public static long tickCounter = 0;
+	public static long ticksPerGeneration = 3000;
+	
+	public static int populationSize = 50;
 	public static ArrayList<Creature> creatures = new ArrayList<Creature>();
 	
-	public static int amountOfFood = 20;
+	public static int amountOfFood = 100;
 	public static ArrayList<FoodPellet> foodPellets = new ArrayList<FoodPellet>();
 	
 	public static void main(String[] args) 
@@ -57,8 +60,28 @@ public class Main
 	{
 		timer += elapsedTime;
 		
+		if(tickCounter>ticksPerGeneration)
+		{
+			ArrayList<Creature> newCreatures = new ArrayList<Creature>();
+			
+			while (newCreatures.size() < populationSize)
+			{
+				ArrayList<Creature> parents = rouletteWheelSelection();
+				Creature childCreature = GenomeUtils.crossover(parents.get(0), parents.get(1));
+				
+				newCreatures.add(childCreature);
+			}
+			
+			creatures.clear();			
+			creatures.addAll(newCreatures);
+			
+			tickCounter = 0;
+		}
+		
 		if (timer>tickInterval)
 		{
+			tickCounter++;
+			
 			if (creatures.size() == 0)
 			{
 				while(creatures.size() < populationSize)
@@ -95,12 +118,14 @@ public class Main
 						
 			for (Creature creature : creatures) 
 			{
+				/*
 				creature.reduceEnergy();
 				
 				if (creature.isDead()) {
 					deadCreatures.add(creature);
 					continue;
 				}
+				*/
 				
 				double distanceToClosestFood = Double.MAX_VALUE;
 				double angleToClosestFood = 0;
@@ -178,10 +203,27 @@ public class Main
 		g2d.setColor(Color.darkGray);
 		g2d.fillRect(0, 0, 800, 800);
 		
+		int populationGeneration = 0;
+		
+		int highestEnergy = 0;
 		
 		for (Creature creature : creatures) 
 		{
-			if (creature.lifeSpan>creature.oldAge)
+			if (creature.energy>highestEnergy) 
+			{
+				highestEnergy = (int) creature.energy;
+			}
+		}
+		
+		for (Creature creature : creatures) 
+		{
+			populationGeneration = creature.generation;
+			
+			if (creature.energy>=highestEnergy)
+			{
+				g2d.setColor(Color.yellow);
+			}
+			else if (creature.lifeSpan>creature.oldAge)
 			{
 				g2d.setColor(Color.red);
 			}
@@ -193,18 +235,20 @@ public class Main
 			Arc2D arc = new Arc2D.Double(creature.x-(creature.diameter/2), creature.y-(creature.diameter/2), creature.diameter, creature.diameter, 0, 360, Arc2D.OPEN);
 			Line2D line = new Line2D.Double(creature.x, creature.y, creature.x + (creature.diameter/2) * Math.sin(creature.angle), creature.y + (creature.diameter/2) * Math.cos(creature.angle));			
 			
-			String energyString = Double.toString(creature.energy);
+			/*String energyString = Double.toString(creature.energy);
 			if (energyString.length()>4) {
 				energyString = energyString.substring(0, 4);
-			}
+			}*/
 			
-			String genString = Integer.toString(creature.generation);
+			String energyString = Integer.toString((int) creature.energy);
+			
+			//String genString = Integer.toString(creature.generation);
 			
 			g2d.draw(arc);
 			g2d.draw(line);
 			g2d.drawString(energyString,(int) (creature.x+(creature.diameter/2)),(int) (creature.y+(creature.diameter/2)));
 			
-			g2d.drawString(genString,(int) (creature.x+(creature.diameter/2)),(int) (creature.y-(creature.diameter/2)));
+			//g2d.drawString(genString,(int) (creature.x+(creature.diameter/2)),(int) (creature.y-(creature.diameter/2)));
 		}
 		
 		g2d.setColor(Color.green);
@@ -214,6 +258,11 @@ public class Main
 			
 			g2d.draw(arc);
 		}
+		
+		g2d.setColor(Color.cyan);
+		g2d.drawString("Tick: "+tickCounter+" of "+ticksPerGeneration,10,10);
+		g2d.drawString("Generation: "+populationGeneration,10,30);
+		g2d.drawString("Highest energy: "+highestEnergy,10,50);
 		
 		mainWindow.drawPane.image = image;
 		mainWindow.repaint();
