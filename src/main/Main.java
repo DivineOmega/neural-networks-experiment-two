@@ -23,7 +23,10 @@ public class Main
 	public static long tickInterval = 0;
 	
 	public static long tickCounter = 0;
-	public static long ticksPerGeneration = 3000;
+	public static long ticksPerGeneration = 9000;
+	
+	public static double highestEnergyThisGeneration = 0;
+	public static double highestEnergyEver = 0;
 	
 	public static int populationSize = 50;
 	public static ArrayList<Creature> creatures = new ArrayList<Creature>();
@@ -115,7 +118,9 @@ public class Main
 			
 			ArrayList<Creature> deadCreatures = new ArrayList<Creature>();
 			ArrayList<FoodPellet> eatenFoodPellets = new ArrayList<FoodPellet>();
-						
+			
+			highestEnergyThisGeneration = 0;
+			
 			for (Creature creature : creatures) 
 			{
 				/*
@@ -126,6 +131,16 @@ public class Main
 					continue;
 				}
 				*/
+				
+				if (creature.energy > highestEnergyThisGeneration) 
+				{
+					highestEnergyThisGeneration = creature.energy;
+				}
+				
+				if (creature.energy > highestEnergyEver)
+				{
+					highestEnergyEver = creature.energy;
+				}
 				
 				double distanceToClosestFood = Double.MAX_VALUE;
 				double angleToClosestFood = 0;
@@ -204,22 +219,16 @@ public class Main
 		g2d.fillRect(0, 0, 800, 800);
 		
 		int populationGeneration = 0;
-		
-		int highestEnergy = 0;
-		
-		for (Creature creature : creatures) 
-		{
-			if (creature.energy>highestEnergy) 
-			{
-				highestEnergy = (int) creature.energy;
-			}
-		}
-		
+				
 		for (Creature creature : creatures) 
 		{
 			populationGeneration = creature.generation;
 			
-			if (creature.energy>=highestEnergy)
+			if (creature.energy>=highestEnergyEver)
+			{
+				g2d.setColor(Color.orange);
+			}
+			else if (creature.energy>=highestEnergyThisGeneration)
 			{
 				g2d.setColor(Color.yellow);
 			}
@@ -262,7 +271,7 @@ public class Main
 		g2d.setColor(Color.cyan);
 		g2d.drawString("Tick: "+tickCounter+" of "+ticksPerGeneration,10,10);
 		g2d.drawString("Generation: "+populationGeneration,10,30);
-		g2d.drawString("Highest energy: "+highestEnergy,10,50);
+		g2d.drawString("Highest energy: gen.: "+(int)highestEnergyThisGeneration+", ever: "+(int)highestEnergyEver,10,50);
 		
 		mainWindow.drawPane.image = image;
 		mainWindow.repaint();
