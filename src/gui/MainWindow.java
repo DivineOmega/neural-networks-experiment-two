@@ -8,7 +8,7 @@ import javax.swing.JOptionPane;
 
 import main.Main;
 
-public class MainWindow extends JFrame implements KeyListener
+public class MainWindow extends JFrame implements KeyListener, Runnable
 {
 	public DrawPane drawPane;
 
@@ -48,6 +48,12 @@ public class MainWindow extends JFrame implements KeyListener
 
 	public void keyTyped(KeyEvent arg0) 
 	{
+		
+	}
+
+	public void run()
+	{
+		this.setVisible(true);
 		
 	}
 	

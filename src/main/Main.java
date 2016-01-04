@@ -11,6 +11,8 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import javax.swing.SwingUtilities;
+
 import util.GenomeUtils;
 import worldObjects.Creature;
 import worldObjects.FoodPellet;
@@ -39,7 +41,7 @@ public class Main
 		simulationSpeedReset();
 		
 		mainWindow = new MainWindow();
-		mainWindow.setVisible(true);
+		SwingUtilities.invokeLater(mainWindow);
 						
 		long lastTime = System.currentTimeMillis();
 		long currentTime;
