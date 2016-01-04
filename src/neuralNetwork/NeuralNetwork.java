@@ -55,6 +55,8 @@ public class NeuralNetwork
 			
 			double input = inputs.get(i); 
 			
+			input = input / 2;
+			
 			while (input > 1 || input < -1)
 			{
 				input = input / 2;
