@@ -24,6 +24,9 @@ public class Main
 	public static long timer = 0;
 	public static long tickInterval = 0;
 	
+	public static long renderTimer = 0;
+	private static int framesPerSecond = 60;
+	
 	public static long tickCounter = 0;
 	public static long ticksPerGeneration = 9000;
 	
@@ -53,7 +56,7 @@ public class Main
 			elapsedTime = currentTime - lastTime;
 			
 			update(elapsedTime);
-			render();
+			render(elapsedTime);
 			
 			lastTime = currentTime;
 		}
@@ -212,8 +215,18 @@ public class Main
 		}
 	}
 	
-	public static void render()
+	public static void render(long elapsedTime)
 	{
+		renderTimer += elapsedTime;
+		
+		// Only render a fixed number of frames per second
+		if (renderTimer <= 1000 / framesPerSecond )
+		{
+			return;
+		}
+		
+		renderTimer = 0;
+		
 		BufferedImage image = new BufferedImage(800, 800, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2d = (Graphics2D) image.getGraphics();
 		
@@ -315,9 +328,9 @@ public class Main
 			tickInterval -= 1;
 		}
 		
-		if (tickInterval<=0)
+		if (tickInterval<0)
 		{
-			tickInterval = 1;
+			tickInterval = 0;
 		}
 	}
 	
