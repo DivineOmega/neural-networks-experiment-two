@@ -50,6 +50,19 @@ public class NeuralNetwork
 	
 	public ArrayList<Double> update(ArrayList<Double> inputs)
 	{
+		// Scale inputs
+		for (int i = 0; i < inputs.size(); i++) {
+			
+			double input = inputs.get(i); 
+			
+			while (input > 1 || input < -1)
+			{
+				input = input / 2;
+			}
+			
+			inputs.set(i, input);
+		}
+		
 		ArrayList<Double> outputs = new ArrayList<Double>();
 		
 		int cWeight = 0;
