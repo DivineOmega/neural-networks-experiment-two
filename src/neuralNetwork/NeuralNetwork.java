@@ -1,6 +1,7 @@
 package neuralNetwork;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class NeuralNetwork
 {
@@ -50,20 +51,6 @@ public class NeuralNetwork
 	
 	public ArrayList<Double> update(ArrayList<Double> inputs)
 	{
-		// Scale inputs
-		for (int i = 0; i < inputs.size(); i++) {
-			
-			double input = inputs.get(i); 
-			
-			input = input / 2;
-			
-			while (input > 1 || input < -1)
-			{
-				input = input / 2;
-			}
-			
-			inputs.set(i, input);
-		}
 		
 		ArrayList<Double> outputs = new ArrayList<Double>();
 		
