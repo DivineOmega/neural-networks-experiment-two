@@ -15,7 +15,7 @@ import javax.swing.SwingUtilities;
 
 import util.GenomeUtils;
 import worldObjects.Creature;
-import worldObjects.FoodPellet;
+import worldObjects.PlayerBullet;
 
 public class Main 
 {	
@@ -30,14 +30,14 @@ public class Main
 	public static long tickCounter = 0;
 	public static long ticksPerGeneration = 9000;
 	
-	public static double highestEnergyThisGeneration = 0;
-	public static double highestEnergyEver = 0;
+	public static double highestFitnessThisGeneration = 0;
+	public static double highestFitnessEver = 0;
 	
-	public static int populationSize = 50;
+	public static int populationSize = 25;
 	public static ArrayList<Creature> creatures = new ArrayList<Creature>();
 	
-	public static int amountOfFood = 100;
-	public static ArrayList<FoodPellet> foodPellets = new ArrayList<FoodPellet>();
+	public static int amountOfPlayerBullets = 50;
+	public static ArrayList<PlayerBullet> playerBullets = new ArrayList<PlayerBullet>();
 	
 	public static void main(String[] args) 
 	{
@@ -70,6 +70,11 @@ public class Main
 		
 		if(tickCounter>ticksPerGeneration)
 		{
+			if (highestFitnessThisGeneration > highestFitnessEver)
+			{
+				highestFitnessEver = highestFitnessThisGeneration;
+			}
+			
 			ArrayList<Creature> newCreatures = new ArrayList<Creature>();
 			
 			while (newCreatures.size() < populationSize)
@@ -115,88 +120,81 @@ public class Main
 				creatures.addAll(newCreatures);
 			}
 			
-			while (foodPellets.size()<amountOfFood)
+			while (playerBullets.size()<amountOfPlayerBullets)
 			{
-				FoodPellet newFoodPellet = new FoodPellet();
-				foodPellets.add(newFoodPellet);
+				int targetCreatureIndex = (int) (Math.random()*creatures.size());
+				Creature targetCreature = creatures.get(targetCreatureIndex);
+				PlayerBullet newPlayerBullet = new PlayerBullet(targetCreature);
+				playerBullets.add(newPlayerBullet);
 			}
 			
 			ArrayList<Creature> deadCreatures = new ArrayList<Creature>();
-			ArrayList<FoodPellet> eatenFoodPellets = new ArrayList<FoodPellet>();
+			ArrayList<PlayerBullet> destroyedPlayerBullets = new ArrayList<PlayerBullet>();
 			
-			highestEnergyThisGeneration = 0;
+			highestFitnessThisGeneration = 0;
 			
 			for (Creature creature : creatures) 
 			{
-				/*
-				creature.reduceEnergy();
-				
-				if (creature.isDead()) {
-					deadCreatures.add(creature);
-					continue;
-				}
-				*/
-				
-				if (creature.energy > highestEnergyThisGeneration) 
+				if (creature.getFitness() > highestFitnessThisGeneration) 
 				{
-					highestEnergyThisGeneration = creature.energy;
+					highestFitnessThisGeneration = creature.getFitness();
 				}
 				
-				if (creature.energy > highestEnergyEver)
-				{
-					highestEnergyEver = creature.energy;
-				}
-				
-				double distanceToClosestFood = Double.MAX_VALUE;
-				double angleToClosestFood = 0;
-				double vectorXToClosestFood = 0;
-				double vectorYToClosestFood = 0;
+				double distanceToClosestPlayerBullet = Double.MAX_VALUE;
+				double angleToClosestPlayerBullet = 0;
+				double vectorXToClosestPlayerBullet = 0;
+				double vectorYToClosestPlayerBullet = 0;
 				
 				Point2D creatureLocation = new Point2D.Double(creature.x, creature.y);
 				
-				for (FoodPellet foodPellet : foodPellets)
+				for (PlayerBullet playerBullet : playerBullets)
 				{
-					Point2D foodLocation = new Point2D.Double(foodPellet.x, foodPellet.y);
+					Point2D playerBulletLocation = new Point2D.Double(playerBullet.x, playerBullet.y);
 					
-					double distanceToFood = creatureLocation.distance(foodLocation);
+					double distanceToPlayerBullet = creatureLocation.distance(playerBulletLocation);
 					
-					if (distanceToFood < distanceToClosestFood)
+					if (distanceToPlayerBullet < distanceToClosestPlayerBullet)
 					{
-						distanceToClosestFood = distanceToFood;
+						distanceToClosestPlayerBullet = distanceToPlayerBullet;
 						
-						angleToClosestFood = Math.atan2(foodPellet.y - creature.y, foodPellet.x - creature.x);
+						angleToClosestPlayerBullet = Math.atan2(playerBullet.y - creature.y, playerBullet.x - creature.x);
 						
-						if (angleToClosestFood<0)
+						if (angleToClosestPlayerBullet<0)
 						{
-							angleToClosestFood += 2*Math.PI;
+							angleToClosestPlayerBullet += 2*Math.PI;
 						}
 						
-						vectorXToClosestFood = foodPellet.x - creature.x;
-						vectorYToClosestFood = foodPellet.y - creature.y;
+						vectorXToClosestPlayerBullet = playerBullet.x - creature.x;
+						vectorYToClosestPlayerBullet = playerBullet.y - creature.y;
 					}
 				}
 				
 				ArrayList<Double> inputs = new ArrayList<Double>();
 				
-				inputs.add(vectorXToClosestFood);
-				inputs.add(vectorYToClosestFood);
+				inputs.add(vectorXToClosestPlayerBullet);
+				inputs.add(vectorYToClosestPlayerBullet);
 				
 				inputs.add(-Math.sin(creature.angle));
 				inputs.add(Math.cos(creature.angle));
 								
 				creature.tick(inputs);
 				
-				for (FoodPellet foodPellet : foodPellets) 
+				for (PlayerBullet playerBullet : playerBullets) 
 				{
-					if (foodPellet.x > creature.x - (creature.diameter/2) &&
-						foodPellet.x < creature.x + (creature.diameter/2) &&
-						foodPellet.y > creature.y - (creature.diameter/2) &&
-						foodPellet.y < creature.y + (creature.diameter/2))
+					playerBullet.tick();
+					
+					if (playerBullet.x > creature.x - (creature.diameter/2) &&
+						playerBullet.x < creature.x + (creature.diameter/2) &&
+						playerBullet.y > creature.y - (creature.diameter/2) &&
+						playerBullet.y < creature.y + (creature.diameter/2))
 					{
-						eatenFoodPellets.add(foodPellet);
-						creature.energy += 1.0;
+						if (!creature.isDead()) {
+							destroyedPlayerBullets.add(playerBullet);
+							creature.energy -= 1.0;
+						}
 					}
 				}
+				
 			}
 			
 			for (Creature deadCreature : deadCreatures) 
@@ -204,12 +202,12 @@ public class Main
 				creatures.remove(deadCreature);
 			}
 			
-			for (FoodPellet eatenFoodPellet : eatenFoodPellets) 
+			for (PlayerBullet destroyedPlayerBullet : destroyedPlayerBullets) 
 			{
-				foodPellets.remove(eatenFoodPellet);
+				playerBullets.remove(destroyedPlayerBullet);
 			}
 			
-			eatenFoodPellets.clear();
+			destroyedPlayerBullets.clear();
 			
 			timer -= tickInterval;
 		}
@@ -239,17 +237,16 @@ public class Main
 		{
 			populationGeneration = creature.generation;
 			
-			if (creature.energy>=highestEnergyEver)
-			{
-				g2d.setColor(Color.orange);
+			if (creature.isDead()) {
+				g2d.setColor(Color.black);
 			}
-			else if (creature.energy>=highestEnergyThisGeneration)
+			else if (creature.getFitness()>=highestFitnessThisGeneration)
 			{
 				g2d.setColor(Color.yellow);
 			}
-			else if (creature.lifeSpan>creature.oldAge)
+			else if (creature.getFitness()>=highestFitnessEver)
 			{
-				g2d.setColor(Color.red);
+				g2d.setColor(Color.orange);
 			}
 			else
 			{
@@ -259,26 +256,18 @@ public class Main
 			Arc2D arc = new Arc2D.Double(creature.x-(creature.diameter/2), creature.y-(creature.diameter/2), creature.diameter, creature.diameter, 0, 360, Arc2D.OPEN);
 			Line2D line = new Line2D.Double(creature.x, creature.y, creature.x + (creature.diameter/2) * Math.sin(creature.angle), creature.y + (creature.diameter/2) * Math.cos(creature.angle));			
 			
-			/*String energyString = Double.toString(creature.energy);
-			if (energyString.length()>4) {
-				energyString = energyString.substring(0, 4);
-			}*/
-			
-			String energyString = Integer.toString((int) creature.energy);
-			
-			//String genString = Integer.toString(creature.generation);
+			String fitnessString = Integer.toString((int) creature.getFitness());
 			
 			g2d.draw(arc);
 			g2d.draw(line);
-			g2d.drawString(energyString,(int) (creature.x+(creature.diameter/2)),(int) (creature.y+(creature.diameter/2)));
+			g2d.drawString(fitnessString,(int) (creature.x+5+(creature.diameter/2)),(int) (creature.y+(creature.diameter/2)));
 			
-			//g2d.drawString(genString,(int) (creature.x+(creature.diameter/2)),(int) (creature.y-(creature.diameter/2)));
 		}
 		
-		g2d.setColor(Color.green);
-		for (FoodPellet foodPellet : foodPellets) 
+		g2d.setColor(Color.red);
+		for (PlayerBullet playerBullet : playerBullets) 
 		{
-			Arc2D arc = new Arc2D.Double(foodPellet.x-(foodPellet.diameter/2), foodPellet.y-(foodPellet.diameter/2), foodPellet.diameter, foodPellet.diameter, 0, 360, Arc2D.OPEN);
+			Arc2D arc = new Arc2D.Double(playerBullet.x-(playerBullet.diameter/2), playerBullet.y-(playerBullet.diameter/2), playerBullet.diameter, playerBullet.diameter, 0, 360, Arc2D.OPEN);
 			
 			g2d.draw(arc);
 		}
@@ -286,7 +275,7 @@ public class Main
 		g2d.setColor(Color.cyan);
 		g2d.drawString("Tick: "+tickCounter+" of "+ticksPerGeneration,10,10);
 		g2d.drawString("Generation: "+populationGeneration,10,30);
-		g2d.drawString("Highest energy: gen.: "+(int)highestEnergyThisGeneration+", ever: "+(int)highestEnergyEver,10,50);
+		g2d.drawString("Highest fitness: gen.: "+(int)highestFitnessThisGeneration+", ever: "+(int)highestFitnessEver,10,50);
 		
 		mainWindow.drawPane.image = image;
 		mainWindow.repaint();
@@ -302,7 +291,7 @@ public class Main
 		{
 			Creature creature = creatures.get(i);
 			
-			for (double j = 0; j < creature.energy; j+=0.1) 
+			for (double j = 0; j < creature.getFitness(); j+=0.1) 
 			{
 				routletteWheel.add(i);
 				
@@ -341,7 +330,7 @@ public class Main
 	
 	public static void simulationSpeedReset()
 	{
-		tickInterval = 75;
+		tickInterval = 30;
 	}
 	
 }

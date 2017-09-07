@@ -17,9 +17,8 @@ public class Creature
 	public double diameter = 15.0;	
 	public double moveRate = 1.5;
 	public final double maxMoveRate = 3.0;
-	public double energy = 1;
-	public int lifeSpan = 0;
-	public final int oldAge = 100000;
+	public double energy = 50;
+	public double lifetime = 0;
 	
 	public NeuralNetwork neuralNetwork = new NeuralNetwork(); 
 	
@@ -54,15 +53,7 @@ public class Creature
 			y += 800;
 		}
 	}
-	
-	public void adjustAngleRandomly()
-	{
-		Random random = new Random();
 		
-		double randomOffset = -((Math.PI*2)*0.02) + (random.nextDouble()*((Math.PI*2)*0.04));
-		adjustAngle(randomOffset);
-	}
-	
 	public void adjustAngle(double offset)
 	{
 		angle += offset;
@@ -88,6 +79,13 @@ public class Creature
 	
 	public void tick(ArrayList<Double> inputs)
 	{
+		if (!isDead()) {		
+			lifetime++;
+		} else {
+			energy = 0;
+			return;
+		}
+		
 		ArrayList<Double> outputs = neuralNetwork.update(inputs);
 		
 		double angleOffset = -(2*Math.PI) + (outputs.get(0)*(4*Math.PI));
@@ -98,26 +96,7 @@ public class Creature
 		
 		moveForward();
 	}
-
-	public void reduceEnergy()
-	{
-		lifeSpan++;
 		
-		if (lifeSpan>oldAge)
-		{
-			energy -= 0.1;
-		}
-		else
-		{
-			energy -= 0.001;
-		}
-	}
-	
-	public boolean isDead()
-	{
-		return (energy<=0);
-	}
-	
 	public ArrayList<Double> getGenome()
 	{
 		ArrayList<Double> genome = new ArrayList<Double>();
@@ -136,5 +115,27 @@ public class Creature
 		neuralNetwork.setWeights(weights);
 		
 	}
+
+	public double getFitness() {
+		
+		double fitness = 0;
+		
+		fitness += lifetime * 0.1;
+		fitness += energy;
+		
+		if (fitness < 1) {
+			fitness = 1;
+		}
+		
+		return fitness;
+	}
+
+	public boolean isDead() {
+		if (energy<=0) {
+			return true;
+		} 
+		return false;
+	}
+
 }
 
