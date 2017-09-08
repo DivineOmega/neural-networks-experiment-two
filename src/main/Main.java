@@ -292,11 +292,6 @@ public class Main
 			for (double j = 0; j < creature.getFitness(); j+=0.1) 
 			{
 				routletteWheel.add(i);
-				
-				if (j>=1000)
-				{
-					break;
-				}
 			}
 		}
 		
