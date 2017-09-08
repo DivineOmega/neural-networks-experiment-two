@@ -28,7 +28,7 @@ public class Main
 	private static int framesPerSecond = 60;
 	
 	public static long tickCounter = 0;
-	public static long ticksPerGeneration = 9000;
+	public static long ticksPerGeneration = 100000;
 	
 	public static double highestFitnessThisGeneration = 0;
 	public static double highestFitnessEver = 0;
@@ -45,10 +45,17 @@ public class Main
 		
 		mainWindow = new MainWindow();
 		SwingUtilities.invokeLater(mainWindow);
+		
+		while(creatures.size() < populationSize)
+		{
+			Creature newCreature = new Creature();
+			creatures.add(newCreature);
+		}
 						
 		long lastTime = System.currentTimeMillis();
 		long currentTime;
 		long elapsedTime;
+		
 		
 		while(true)
 		{
@@ -94,36 +101,12 @@ public class Main
 		if (timer>tickInterval)
 		{
 			tickCounter++;
-			
-			if (creatures.size() == 0)
-			{
-				while(creatures.size() < populationSize)
-				{
-					Creature newCreature = new Creature();
-					creatures.add(newCreature);
-				}
-			}
-			else if (creatures.size() < populationSize)
-			{
-				ArrayList<Creature> newCreatures = new ArrayList<Creature>();
-								
-				while (newCreatures.size() < populationSize - creatures.size())
-				{
-					ArrayList<Creature> parents = rouletteWheelSelection();
-					Creature childCreature = GenomeUtils.crossover(parents.get(0), parents.get(1));
-					Creature secondChildCreature = GenomeUtils.crossover(parents.get(1), parents.get(0));
-					
-					newCreatures.add(childCreature);
-					newCreatures.add(secondChildCreature);
-				}
-				
-				creatures.addAll(newCreatures);
-			}
-			
+						
 			while (playerBullets.size()<amountOfPlayerBullets)
 			{
 				int targetCreatureIndex = (int) (Math.random()*creatures.size());
 				Creature targetCreature = creatures.get(targetCreatureIndex);
+
 				PlayerBullet newPlayerBullet = new PlayerBullet(targetCreature);
 				playerBullets.add(newPlayerBullet);
 			}
@@ -208,6 +191,18 @@ public class Main
 			}
 			
 			destroyedPlayerBullets.clear();
+			
+			int numberOfDeadCreatures = 0;
+			for (Creature creature : creatures) 
+			{
+				if (creature.isDead()) {
+					numberOfDeadCreatures++;
+				}
+			}
+			
+			if (numberOfDeadCreatures >= creatures.size()) {
+				tickCounter += 1000;
+			}
 			
 			timer -= tickInterval;
 		}
