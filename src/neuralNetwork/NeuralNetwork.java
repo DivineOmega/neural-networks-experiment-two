@@ -5,7 +5,7 @@ import java.util.Collections;
 
 public class NeuralNetwork
 {
-	int numInputs = 4;
+	int numInputs = 5;
 	int numOutputs = 2;
 	
 	int numHiddenLayers = 2;

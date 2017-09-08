@@ -125,6 +125,7 @@ public class Main
 				
 				double distanceToClosestPlayerBullet = Double.MAX_VALUE;
 				double angleToClosestPlayerBullet = 0;
+				double angleOfClosestPlayerBullet = 0;
 				double vectorXToClosestPlayerBullet = 0;
 				double vectorYToClosestPlayerBullet = 0;
 				
@@ -149,6 +150,7 @@ public class Main
 						
 						vectorXToClosestPlayerBullet = playerBullet.x - creature.x;
 						vectorYToClosestPlayerBullet = playerBullet.y - creature.y;
+						angleOfClosestPlayerBullet = playerBullet.angle;
 					}
 				}
 				
@@ -156,6 +158,7 @@ public class Main
 				
 				inputs.add(vectorXToClosestPlayerBullet);
 				inputs.add(vectorYToClosestPlayerBullet);
+				inputs.add(angleOfClosestPlayerBullet);
 				
 				inputs.add(-Math.sin(creature.angle));
 				inputs.add(Math.cos(creature.angle));
